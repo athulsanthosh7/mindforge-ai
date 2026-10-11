@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
+import AITutor from "./AITutor";
 
 const SUBJECTS = [
   { id: "all", name: "All Subjects", icon: "◈" },
@@ -644,9 +645,11 @@ function App() {
                 ? "Smart Recall"
                 : view === "arena"
                   ? "Brain Arena"
-                  : view === "session"
-                  ? "Learning Session"
-                  : "Session Results"}
+                  : view === "tutor"
+                    ? "AI Tutor"
+                    : view === "session"
+                      ? "Learning Session"
+                      : "Session Results"}
         </div>
 
         <div className="topbar-right">
@@ -699,6 +702,13 @@ function App() {
           onClick={() => setView("arena")}
         >
           <span>⚔</span> Brain Arena
+        </button>
+
+        <button
+          className={`nav-item ${view === "tutor" ? "active" : ""}`}
+          onClick={() => setView("tutor")}
+        >
+          <span>✳</span> AI Tutor
         </button>
 
         <div className="sidebar-bottom">
@@ -800,6 +810,39 @@ function App() {
             <Mission title="Remember it" detail="Complete 1 recall question" done={savedData.attempts.some((a) => isToday(a.timestamp) && a.workflow === "recall")} reward="+25 XP" />
           </div>
           <p className="metric-note">Missions currently track your activity; rewards are awarded for recorded learning actions rather than claimed automatically for mission completion.</p>
+        </section>
+
+        <section className="independent-challenge panel-card">
+          <div className="independent-challenge-content">
+            <div className="panel-kicker">THE THINK-FIRST CHALLENGE</div>
+
+            <h2>Can you solve it without help?</h2>
+
+            <p>
+              Put your understanding to the test. Work through questions
+              independently, trust your reasoning, and review your mistakes
+              after each attempt.
+            </p>
+
+            <div className="independent-challenge-tags">
+              <span>✦ No hints</span>
+              <span>◎ Independent answers</span>
+              <span>↗ Progress tracking</span>
+            </div>
+
+            <button
+              className="primary-button"
+              onClick={() => startSession("all", "independent", "practice")}
+            >
+              Start independent challenge <span>→</span>
+            </button>
+          </div>
+
+          <div className="independent-challenge-art" aria-hidden="true">
+            <div className="challenge-orbit challenge-orbit-one" />
+            <div className="challenge-orbit challenge-orbit-two" />
+            <div className="challenge-core">✳</div>
+          </div>
         </section>
 
         <section className="subject-section">
@@ -1676,6 +1719,7 @@ function App() {
         {view === "progress" && renderProgress()}
         {view === "recall" && renderRecall()}
         {view === "arena" && renderArena()}
+        {view === "tutor" && <AITutor />}
       </main>
     </div>
   );
